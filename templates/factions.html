@@ -1,0 +1,91 @@
+
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-4"><i class="fas fa-users me-3"></i>Factions</h1>
+    <p class="lead">Liste des factions actives et leurs informations</p>
+</div>
+
+{% if factions %}
+    <div class="row g-4">
+    {% for faction_name, faction in factions.items() %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        <i class="fas fa-crown text-warning"></i>
+                        {{ faction_name }}
+                    </h3>
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-user"></i>Chef</span>
+                            <span class="badge bg-primary">{{ faction.leader }}</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-coins"></i>Solde</span>
+                            <span class="badge bg-success">{{ faction.balance }} {{ faction.currency_name }}</span>
+                        </div>
+                        <div class="list-group-item">
+                            <h5><i class="fas fa-box"></i> Ressources</h5>
+                            <div class="d-flex flex-wrap justify-content-between">
+                                <div class="mb-2 me-2"><span class="badge bg-warning">{{ faction.resources.bois }}</span> Bois</div>
+                                <div class="mb-2 me-2"><span class="badge bg-secondary">{{ faction.resources.pierre }}</span> Pierre</div>
+                                <div class="mb-2 me-2"><span class="badge bg-dark">{{ faction.resources.fer }}</span> Fer</div>
+                                <div class="mb-2"><span class="badge bg-warning">{{ faction.resources.or }}</span> Or</div>
+                            </div>
+                        </div>
+                        {% if faction.buildings %}
+                        <div class="list-group-item">
+                            <h5><i class="fas fa-building"></i> Bâtiments</h5>
+                            <ul class="list-unstyled">
+                                {% for building_name, level in faction.buildings.items() %}
+                                <li class="mb-1">
+                                    {% if building_name == "quartier_general" %}
+                                    <span class="text-primary">Quartier Général</span>
+                                    {% elif building_name == "mine" %}
+                                    <span class="text-secondary">Mine</span>
+                                    {% elif building_name == "scierie" %}
+                                    <span class="text-success">Scierie</span>
+                                    {% elif building_name == "forge" %}
+                                    <span class="text-danger">Forge</span>
+                                    {% elif building_name == "marche" %}
+                                    <span class="text-warning">Marché</span>
+                                    {% elif building_name == "palais" %}
+                                    <span class="text-info">Palais</span>
+                                    {% elif building_name == "academie" %}
+                                    <span class="text-dark">Académie</span>
+                                    {% elif building_name == "tresorerie" %}
+                                    <span class="text-warning">Trésorerie</span>
+                                    {% elif building_name == "tribunal" %}
+                                    <span class="text-primary">Tribunal</span>
+                                    {% elif building_name == "ambassade" %}
+                                    <span class="text-info">Ambassade</span>
+                                    {% else %}
+                                    <span>{{ building_name }}</span>
+                                    {% endif %}
+                                    <span class="badge bg-info">Niveau {{ level }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-exchange-alt"></i>Taux de change</span>
+                            <span class="badge bg-info">1 {{ faction.currency_name }} = {{ faction.exchange_rate }} monnaie générale</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% else %}
+    <div class="card text-center">
+        <div class="card-body py-5">
+            <h3 class="mb-3">Aucune faction trouvée</h3>
+            <p class="text-muted">Il n'y a pas encore de factions créées.</p>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
