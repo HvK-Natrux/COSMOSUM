@@ -1,23 +1,21 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template
 import json
-import os
 from faction_manager import FactionManager
-from threading import Thread
 
 app = Flask(__name__)
 faction_manager = FactionManager()
 
 @app.route('/')
-def index():
-    """Affiche le tableau de bord principal"""
+def home():
+    """Page d'accueil"""
     factions = faction_manager._load_factions()
-    return render_template('index.html', factions=factions)
+    return render_template('index.html', faction_count=len(factions))
 
-@app.route('/api/factions', methods=['GET'])
-def get_factions():
-    """Point d'API pour obtenir toutes les factions"""
+@app.route('/factions')
+def factions():
+    """Liste des factions"""
     factions = faction_manager._load_factions()
-    return jsonify(factions)
+    return render_template('factions.html', factions=factions)
 
 def run():
     """Démarre le serveur Flask"""
@@ -25,7 +23,8 @@ def run():
 
 def start_server():
     """Démarre le serveur dans un thread séparé"""
+    from threading import Thread
     t = Thread(target=run)
-    t.daemon = True  # Le thread s'arrêtera quand le programme principal s'arrête
+    t.daemon = True
     t.start()
     return t
